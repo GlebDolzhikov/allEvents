@@ -1,6 +1,6 @@
 const express = require('express');
 const requestLib = require('request');
-var mcache = require('memory-cache');
+const mcache = require('memory-cache');
 
 var cache = (duration) => {
     return (req, res, next) => {
@@ -29,16 +29,35 @@ app.listen(app.get('port'), function () {
     console.log('Node app is running on port', app.get('port'));
 });
 
-app.get('/give-me-page', cache(10), function (request, response) {
+app.get('/', cache(10), function (request, response) {
     console.log('do request');
-    requestLib.get(request.query.page, {}, (err, res, body) => {
-        if (err) {
-            console.log(err);
-        }
-        if (res.statusCode === 200) {
-            response.send(body)
-        }
+    run().then((data)=>{
+        response.send(data)
     });
+
 });
 
+function run() {
+    const doRequests = [
+        getPageContent('http://runukraine.org/'),
+        getPageContent('https://athletic-events.com/calendar'),
+        getPageContent('https://sportevent.com.ua/events'),
+    ];
+    return Promise.all(doRequests).then((siteDataArray) =>{
+       return siteDataArray.join(',')
+    })
+}
 
+function getPageContent(url) {
+    return new Promise(resolve=>{
+        requestLib.get(url, {}, (err, res, body) => {
+            if (err) {
+                console.log('errrr');
+                console.log(err);
+            }
+            if (res.statusCode === 200) {
+                resolve(body)
+            }
+        });
+    })
+}
