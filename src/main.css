@@ -19,6 +19,7 @@ body {
 }
 
 .event {
+    text-align: center;
     display: inline-block;
     background: #fff;
     padding: 1em;
@@ -28,6 +29,12 @@ body {
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
     box-shadow: 2px 2px 4px 0 #ccc;
+}
+.event img{
+    width: 100%;
+}
+.event p{
+    text-align: right;
 }
 
 @media only screen and (min-width: 400px) {

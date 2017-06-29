@@ -2,6 +2,7 @@ const express = require('express');
 const requestLib = require('request');
 const mcache = require('memory-cache');
 const cheerio = require('cheerio');
+const moment = require('moment');
 
 var cache = (duration) => {
     return (req, res, next) => {
@@ -52,27 +53,41 @@ function run() {
                 return {
                     title: el.find('h2').text(),
                     img: el.find('img').attr('src'),
-                    date: el.find('.date').text(),
+                    date: moment(el.find('.date').text(), "DD.MM.YYYY").toDate().toISOString(),
                     link: el.attr('href'),
                 }
             }, '.main-events-list .event'),
-        parseContent('https://athletic-events.com/events',
+        parseContent('https://athletic-events.com/en/events',
             el => {
                 return {
-                    title: el.find('h2.thin').text(),
+                    title: el.find('h2.thin').eq(0).text(),
                     img: el.find('img').attr('src'),
-                    date: el.find('.muted.small').text(),
+                    date: el.find('.muted.small').html().substring(1,el.find('.muted.small').html().indexOf('<')-1), //
                     link: 'https://athletic-events.com/' + el.find('a').attr('href'),
                     description: el.find('.description').text(),
                 }
-            }, '.events .row'),
+            }, '.hidden-tablet .events .row'),
         parseContent('https://sportevent.com.ua/events',
             el => {
+                const monthArr=[
+                    'Янв',
+                    'Фев',
+                    'Мар',
+                    'Апр',
+                    'Май',
+                    'Июн',
+                    'Июл',
+                    'Авг',
+                    'Сен',
+                    'Ноя',
+                    'Дек',
+                ];
                 return {
-                    title: el.find('.event-name').text(),
+                    title: el.find('.event-name').children().remove().end().text(),
                     img: 'https://sportevent.com.ua/' + el.find('img').attr('src'),
-                    date: el.find('.calendar .day').text() + ' ' + el.find('.calendar .month').text(),
+                    date: (monthArr.indexOf(el.find('.event-date').eq(1).find('.calendar .month').eq(0).text().substring(0,3)) + 1) + ' ' + el.find('.event-date').eq(1).find('.calendar .day').text(),
                     link: 'https://sportevent.com.ua/' + el.attr('onclick').replace("location.href='", '').replace("';", ''),
+                    description: el.find('.event-stext').text(),
                 }
             }, '.event-holder')
     ];
