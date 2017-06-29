@@ -59,8 +59,8 @@ function run() {
         parseContent('https://athletic-events.com/calendar',
             el => {
                 return {
-                    title: el.find('h2').text(),
-                    img: el.find('img').attr('src'),
+                    title: el.find('h2 .thin').text(),
+                    img: 'https://athletic-events.com/' + el.find('img').attr('src'),
                     date: el.find('.span2.text-center strong').text(),
                     link: 'https://athletic-events.com/' + el.find('a').attr('href'),
                 }
@@ -69,9 +69,9 @@ function run() {
             el => {
                 return {
                     title: el.find('.event-name').text(),
-                    img: el.find('img').attr('src'),
-                    date: el.find('.day').text() + ' ' + el.find('.month').text(),
-                    link: el.attr('onclick').replace("location.href='", '').replace("'", ''),
+                    img: 'https://sportevent.com.ua/' + el.find('img').attr('src'),
+                    date: el.find('.calendar .day').text() + ' ' + el.find('.calendar .month').text(),
+                    link: 'https://sportevent.com.ua/' + el.attr('onclick').replace("location.href='", '').replace("';", ''),
                 }
             }, '.event-holder')
     ];
