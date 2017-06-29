@@ -56,13 +56,14 @@ function run() {
                     link: el.attr('href'),
                 }
             }, '.main-events-list .event'),
-        parseContent('https://athletic-events.com/calendar',
+        parseContent('https://athletic-events.com/events',
             el => {
                 return {
-                    title: el.find('h2 .thin').text(),
-                    img: 'https://athletic-events.com/' + el.find('img').attr('src'),
-                    date: el.find('.span2.text-center strong').text(),
+                    title: el.find('h2.thin').text(),
+                    img: el.find('img').attr('src'),
+                    date: el.find('.muted.small').text(),
                     link: 'https://athletic-events.com/' + el.find('a').attr('href'),
+                    description: el.find('.description').text(),
                 }
             }, '.events .row'),
         parseContent('https://sportevent.com.ua/events',
