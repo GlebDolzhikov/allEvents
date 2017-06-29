@@ -14,6 +14,9 @@ const App = React.createClass({
     },
 
     render() {
+        if(this.state.eventsToShow.length === 0) {
+            return <div className="loader"> Loading... </div>
+        }
         return (
             <div className="wrapper">
                 <div className="masonry">
@@ -26,7 +29,7 @@ const App = React.createClass({
     },
 
     componentDidMount() {
-        fetch('http://localhost:5000/allEvents').then((response) => { // 'https://still-caverns-40972.herokuapp.com/allEvents'
+        fetch('https://still-caverns-40972.herokuapp.com/allEvents').then((response) => {
                 return response.json()
             }
         ).then((json) => {

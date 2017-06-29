@@ -62,7 +62,7 @@ function run() {
                 return {
                     title: el.find('h2.thin').eq(0).text(),
                     img: el.find('img').attr('src'),
-                    date: el.find('.muted.small').html().substring(1,el.find('.muted.small').html().indexOf('<')-1), //
+                    date: el.find('.muted.small').html().substring(1,el.find('.muted.small').html().indexOf('<')-1),
                     link: 'https://athletic-events.com/' + el.find('a').attr('href'),
                     description: el.find('.description').text(),
                 }
