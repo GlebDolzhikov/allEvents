@@ -1,6 +1,7 @@
 const express = require('express');
 const requestLib = require('request');
 const mcache = require('memory-cache');
+const cheerio = require('cheerio');
 
 var cache = (duration) => {
     return (req, res, next) => {
@@ -29,9 +30,9 @@ app.listen(app.get('port'), function () {
     console.log('Node app is running on port', app.get('port'));
 });
 
-app.get('/', cache(10), function (request, response) {
+app.get('/allEvents', cache(100), function (request, response) {
     console.log('do request');
-    run().then((data)=>{
+    run().then((data) => {
         response.send(data)
     });
 
@@ -39,17 +40,41 @@ app.get('/', cache(10), function (request, response) {
 
 function run() {
     const doRequests = [
-        getPageContent('http://runukraine.org/'),
-        getPageContent('https://athletic-events.com/calendar'),
-        getPageContent('https://sportevent.com.ua/events'),
+        parseContent('http://runukraine.org/',
+            el => {
+                return {
+                    title: el.find('h2').text(),
+                    img: el.find('img').attr('src'),
+                    date: el.find('.date').text(),
+                    link: el.attr('href'),
+                }
+            }, '.main-events-list .event'),
+        parseContent('https://athletic-events.com/calendar',
+            el => {
+                return {
+                    title: el.find('h2').text(),
+                    img: el.find('img').attr('src'),
+                    date: el.find('.span2.text-center strong').text(),
+                    link: 'https://athletic-events.com/' + el.find('a').attr('href'),
+                }
+            }, '.events .row'),
+        parseContent('https://sportevent.com.ua/events',
+            el => {
+                return {
+                    title: el.find('.event-name').text(),
+                    img: el.find('img').attr('src'),
+                    date: el.find('.day').text() + ' ' + el.find('.month').text(),
+                    link: el.attr('onclick').replace("location.href='", '').replace("'", ''),
+                }
+            }, '.event-holder')
     ];
-    return Promise.all(doRequests).then((siteDataArray) =>{
-       return siteDataArray.join(',')
+    return Promise.all(doRequests).then((siteDataArray) => {
+        return [].concat.apply([], siteDataArray);
     })
 }
 
 function getPageContent(url) {
-    return new Promise(resolve=>{
+    return new Promise(resolve => {
         requestLib.get(url, {}, (err, res, body) => {
             if (err) {
                 console.log('errrr');
@@ -59,5 +84,19 @@ function getPageContent(url) {
                 resolve(body)
             }
         });
+    })
+}
+
+function parseContent(url, parseMap, eventsSelecot) {
+    return getPageContent(url).then((data) => {
+        const $ = cheerio.load(data);
+        const events = $(eventsSelecot);
+        const dataFromPage = [];
+        events.each((i, el) => {
+            el = $(el);
+            const event = parseMap(el);
+            dataFromPage.push(event);
+        });
+        return dataFromPage;
     })
 }
