@@ -19,6 +19,7 @@
     "memory-cache": "^0.2.0",
     "moment": "^2.18.1",
     "moment-parseplus": "^1.0.2",
+    "react-date-range": "^0.9.4",
     "react-tap-event-plugin": "^2.0.1",
     "request": "^2.81.0"
   },
