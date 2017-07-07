@@ -55,6 +55,7 @@ function run() {
                     img: el.find('img').attr('src'),
                     date: moment(el.find('.date').text(), "DD.MM.YYYY").toDate().toISOString(),
                     link: el.attr('href'),
+                    type: el.find('c-type').children().length == 3 ? 'triathlon' : 'run'
                 }
             }, '.main-events-list .event'),
         parseContent('https://athletic-events.com/en/events',
@@ -65,6 +66,7 @@ function run() {
                     date: el.find('.muted.small').html().substring(1,el.find('.muted.small').html().indexOf('<')-1),
                     link: 'https://athletic-events.com/' + el.find('a').attr('href'),
                     description: el.find('.description').text(),
+                    type: el.attr('class').replace('row ', '')
                 }
             }, '.hidden-tablet .events .row'),
         parseContent('https://sportevent.com.ua/events',

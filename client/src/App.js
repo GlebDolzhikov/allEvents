@@ -1,18 +1,9 @@
-const EventItem = ({event})=>(
-    <div className="event">
-        <a href={event.link}>
-            <h4>{event.title}</h4>
-            <img className="img-responsive" src={event.img} alt=""/>
-        </a>
-        <p>{event.date.format('DD MMMM')}</p>
-    </div>
-)
+import React, { Component } from 'react';
+import './App.css';
+import moment from 'moment';
 
-const App = React.createClass({
-    getInitialState() {
-       return {eventsToShow: []};
-    },
-
+class App extends Component {
+    state = {eventsToShow: []};
     render() {
         if(this.state.eventsToShow.length === 0) {
             return <div className="loader"> Loading... </div>
@@ -21,13 +12,12 @@ const App = React.createClass({
             <div className="wrapper">
                 <div className="masonry">
                     {this.state.eventsToShow.map((event, i) =>(
-                         <EventItem event={event} key={i} />
+                        <EventItem event={event} key={i} />
                     ))}
                 </div>
             </div>
         );
-    },
-
+    }
     componentDidMount() {
         fetch('https://still-caverns-40972.herokuapp.com/allEvents').then((response) => {
                 return response.json()
@@ -40,16 +30,22 @@ const App = React.createClass({
             json = json.sort((a, b) => {
                 return new Date(a.date.toDate()) - new Date(b.date.toDate());
             });
-            console.log(json);
             this.setState({
                 eventsToShow: json
             })
         })
     }
-});
+}
+
+export default App;
 
 
-ReactDOM.render(
-    <App />,
-    document.getElementById('greeting-div')
-);
+const EventItem = ({event})=>(
+    <div className="event">
+        <a href={event.link}>
+            <h4>{event.title}</h4>
+            <img className="img-responsive" src={event.img} alt=""/>
+        </a>
+        <p>{event.date.format('DD MMMM')}</p>
+    </div>
+)
