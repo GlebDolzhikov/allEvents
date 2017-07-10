@@ -1,4 +1,4 @@
-'All events' it's an open source project which created with main goal 
+"All events" it's an open source project which created with main goal 
 to fetch and show out consolidated calendar of Ukrainian sports events.
 
 Running, bicycle, swimming and triathlons events are here.
