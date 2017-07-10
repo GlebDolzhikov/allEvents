@@ -4,24 +4,25 @@ const mcache = require('memory-cache');
 const cheerio = require('cheerio');
 const moment = require('moment');
 
-var cache = (duration) => {
+// cache helper pas to endpont handler on line 42 as middleware that prevent parsing if cache isn't expire
+const cache = (duration) => {
     return (req, res, next) => {
-        let key = '__express__' + req.originalUrl || req.url
-        let cachedBody = mcache.get(key)
+        let key = '__express__' + req.originalUrl || req.url;
+        let cachedBody = mcache.get(key);
         if (cachedBody) {
             console.log('cachedBody');
-            res.send(cachedBody)
+            res.send(cachedBody);
             return
         } else {
-            res.sendResponse = res.send
+            res.sendResponse = res.send;
             res.send = (body) => {
                 mcache.put(key, body, duration * 1000);
                 res.sendResponse(body)
-            }
-            next()
+            };
+            next(); // run callback function with parsing
         }
     }
-}
+};
 
 const app = express();
 
@@ -38,13 +39,15 @@ app.listen(app.get('port'), function () {
     console.log('Node app is running on port', app.get('port'));
 });
 
-app.get('/allEvents', cache(100), function (request, response) {
+app.get('/allEvents', cache(3600), function (request, response) {
     console.log('do request');
     run().then((data) => {
         response.send(data)
     });
 
 });
+
+//parser logic start
 
 function run() {
     const doRequests = [
@@ -98,11 +101,15 @@ function run() {
     })
 }
 
+//parser logic end
+
+
+//helpers
+
 function getPageContent(url) {
     return new Promise(resolve => {
         requestLib.get(url, {}, (err, res, body) => {
             if (err) {
-                console.log('errrr');
                 console.log(err);
             }
             if (res.statusCode === 200) {
@@ -112,10 +119,10 @@ function getPageContent(url) {
     })
 }
 
-function parseContent(url, parseMap, eventsSelecot) {
+function parseContent(url, parseMap, eventsSelector) {
     return getPageContent(url).then((data) => {
         const $ = cheerio.load(data);
-        const events = $(eventsSelecot);
+        const events = $(eventsSelector);
         const dataFromPage = [];
         events.each((i, el) => {
             el = $(el);

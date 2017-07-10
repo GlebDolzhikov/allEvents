@@ -1,7 +1,7 @@
 {
-  "name": "node-js-getting-started",
+  "name": "all events",
   "version": "0.2.6",
-  "description": "A sample Node.js app using Express 4",
+  "description": "all events",
   "engines": {
     "node": "6.10.2"
   },

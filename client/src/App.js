@@ -1,7 +1,10 @@
 import React, {Component} from "react";
 import "./App.css";
 import moment from "moment";
-import {AppBar, DatePicker, Card, Dialog, FlatButton} from "material-ui";
+import {AppBar, DatePicker} from "material-ui";
+
+import EventsWrapper from './Components/EventsWrapper';
+import ModalView from './Components/ModalView';
 
 class App extends Component {
     state = {
@@ -68,13 +71,6 @@ class App extends Component {
         if (this.state.eventsToShow.length === 0) {
             return <div className="loader"> Loading... </div>
         }
-        const actions = [
-            <FlatButton
-                label="Close"
-                primary={true}
-                onTouchTap={this.handleClose}
-            />
-        ];
         return (
             <div>
                 <AppBar title="All events"
@@ -92,17 +88,8 @@ class App extends Component {
                         minDate={this.state.filters.minDate}
                     />
                 </AppBar>
-                {renderEvents(filtredEvents, this.setModalContent)}
-                {this.state.modalContent && <Dialog
-                    title={this.state.modalContent.title}
-                    modal={false}
-                    open={this.state.openModal}
-                    onRequestClose={this.handleClose}
-                    actions={actions}
-                >
-                    <img src={this.state.modalContent.img} alt=""/>
-                    <p>{this.state.modalContent.description}</p>
-                </Dialog>}
+                <EventsWrapper eventsToShow={filtredEvents} setModalContent={this.setModalContent}/>
+                <ModalView modalContent={this.state.modalContent} openModal={this.state.openModal} handleClose={this.handleClose}/>
             </div>
         );
     }
@@ -127,29 +114,3 @@ class App extends Component {
 }
 
 export default App;
-
-function renderEvents(eventsToShow, setModalContent) {
-    return (
-        <div className="wrapper">
-            <div className="masonry">
-                {eventsToShow.map((event, i) => (
-                    <EventItem event={event} key={i} setModalContent={setModalContent}/>
-                ))}
-            </div>
-        </div>)
-}
-
-const EventItem = ({event, setModalContent}) => (
-    <Card className="event">
-        <a href={event.link}>
-            <h4>{event.title}</h4>
-            <img className="img-responsive" src={event.img} alt=""/>
-        </a>
-            {event.description && <FlatButton label="Подробнее"
-                        onTouchTap={() => {
-                            if (event.description) setModalContent(event)
-                        }}/>
-                }
-        <p>{event.date.format('DD MMMM')}</p>
-    </Card>
-)
