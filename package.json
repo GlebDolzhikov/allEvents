@@ -1,13 +1,13 @@
 {
-  "name": "all events",
+  "name": "allEvents",
   "version": "0.2.6",
   "description": "all events",
   "engines": {
     "node": "6.10.2"
   },
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node server.js"
   },
   "dependencies": {
     "cheerio": "^1.0.0-rc.1",

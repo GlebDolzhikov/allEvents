@@ -95,7 +95,7 @@ class App extends Component {
     }
 
     componentDidMount() {
-        fetch('https://still-caverns-40972.herokuapp.com/allEvents').then((response) => {
+        fetch('https://still-caverns-40972.herokuapp.com/allEvents').then((response) => { // http://localhost:5000/allEvents pass me to use local server
                 return response.json()
             }
         ).then((json) => {
