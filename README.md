@@ -1,7 +1,14 @@
+## Description
 "All events" it's an open source project which created with main goal 
 to fetch and show out consolidated calendar of Ukrainian sports events.
 
 Running, bicycle, swimming and triathlons events are here.
+
+Client:
+http://www.kinosura.kiev.ua/events/
+
+Server hosted on Heroku:
+https://still-caverns-40972.herokuapp.com/allEvents
 
 Any PR and contribution are welcome.
 ## Our stack
