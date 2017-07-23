@@ -99,16 +99,13 @@ class App extends Component {
                 return response.json()
             }
         ).then((json) => {
-            json = json.map(event => {
+            const eventsToShow  = json.map(event => {
                 event.date = moment(event.date).set('year', new Date().getFullYear());
                 return event;
-            });
-            json = json.sort((a, b) => {
+            }).sort((a, b) => {
                 return new Date(a.date.toDate()) - new Date(b.date.toDate());
             });
-            this.setState({
-                eventsToShow: json
-            })
+            this.setState({ eventsToShow });
         })
     }
 }
