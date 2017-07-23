@@ -2,7 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import EventItem from './EventItem';
 
-const propTypes = {};
+const propTypes = {
+    eventsToShow: PropTypes.arrayOf(PropTypes.object.isRequired),
+    setModalContent: PropTypes.func.isRequired,
+};
 
 const EventsWrapper = ({eventsToShow, setModalContent}) => (
     <div className="wrapper">

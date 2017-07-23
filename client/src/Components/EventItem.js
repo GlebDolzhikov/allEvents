@@ -2,7 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {Card, FlatButton} from 'material-ui'
 
-const propTypes = {};
+const propTypes = {
+    event: PropTypes.object.isRequired,
+    setModalContent: PropTypes.func.isRequired,
+};
 
 const EventItem = ({event, setModalContent}) => (
     <Card className="event">
