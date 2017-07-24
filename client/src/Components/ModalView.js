@@ -1,7 +1,16 @@
 import React from "react";
+import PropTypes from "prop-types";
 import {Dialog, FlatButton} from "material-ui";
 
-const propTypes = {};
+const propTypes = {
+    modalContent: PropTypes.object.isRequired,
+    openModal: PropTypes.bool.isRequired,
+    handleClose: PropTypes.func.isRequired,
+};
+
+const defaultProps = {
+    modalContent: {},
+};
 
 const ModalView = ({modalContent, openModal, handleClose}) => {
     if (modalContent) {
@@ -27,6 +36,6 @@ const ModalView = ({modalContent, openModal, handleClose}) => {
 };
 
 ModalView.propTypes = propTypes;
-ModalView.defaultProps = {};
+ModalView.defaultProps = defaultProps;
 
 export default ModalView;
