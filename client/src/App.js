@@ -62,11 +62,8 @@ class App extends Component {
         fetchGithub().then(contributors =>{
             this.setModalContent({
                 title: "О проекте",
-                description:`
-            All events - это не коммерческий проект с открытым кодом.
-            Главная цель которого собрать в единный календарь все старты по бегу велоспорту и плаванью.
-            `,
-                img:"opensource.png",
+                description:`All events - это не коммерческий проект с открытым кодом.
+                Главная цель которого собрать в единный календарь все старты по бегу велоспорту и плаванью.`,
                 contributors
             })
         });

@@ -15,8 +15,8 @@ const defaultProps = {
     modalContent: {}
 };
 
-const ModalView = ({modalContent, openModal, handleClose}) => {
-    const {contributors} = modalContent;
+const ModalView = ({modalContent, openModal, handleClose, linkText}) => {
+    const {contributors, link} = modalContent;
     if (modalContent) {
         return (
             <Dialog
@@ -36,20 +36,26 @@ const ModalView = ({modalContent, openModal, handleClose}) => {
                 <img src={modalContent.img} alt=""/>
                 <p>{modalContent.description}</p>
                 {contributors && contributors.length > 0 &&
-                    <List>
-                        <Subheader>Разработчики</Subheader>
-                        {contributors.map((user) =>
-                        <a href={user.html_url}
-                           key={user.id}
-                            >
-                            <ListItem
-                                primaryText={user.login}
-                                leftAvatar={<Avatar src={user.avatar_url} />}
-                                rightIcon={<CommunicationChatBubble/>}
-                                />
-                        </a>
-                        )}
-                    </List>
+                    <div>
+                        <div> Мы пришлашаем всех к участию и развитию этого проекта, дизайнеры, тестировшики, бек и
+                            фронт девелоперы
+                            <a href="https://github.com/GlebDolzhikov/allEvents"> би велком! </a>
+                        </div>
+                        <List>
+                            <Subheader>Разработчики</Subheader>
+                            {contributors.map((user) =>
+                            <a href={user.html_url}
+                               key={user.id}
+                                >
+                                <ListItem
+                                    primaryText={user.login}
+                                    leftAvatar={<Avatar src={user.avatar_url} />}
+                                    rightIcon={<CommunicationChatBubble/>}
+                                    />
+                            </a>
+                            )}
+                        </List>
+                    </div>
                 }
             </Dialog>)
     }
