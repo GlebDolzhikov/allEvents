@@ -1,12 +1,13 @@
 import React, {Component} from "react";
 import "./App.css";
 import moment from "moment";
-import {AppBar, DatePicker, FlatButton} from "material-ui";
+import {AppBar, FlatButton} from "material-ui";
 
 import EventsWrapper from './Components/EventsWrapper';
 import ModalView from './Components/ModalView';
-import fetchGithub from './helpers/fetchGithub.js'
-
+import fetchGithub from './helpers/fetchGithub'
+import Calendar from './view/Calendar'
+import Nav from './view/Nav'
 
 class App extends Component {
     state = {
@@ -19,7 +20,8 @@ class App extends Component {
                 'bike'
             ]
         },
-        openModal: false
+        openModal: false,
+        calendarView: false
     };
 
     handleStartDateSelect = (param, date) => {
@@ -58,7 +60,6 @@ class App extends Component {
 
     createAboutModal = () => {
         fetchGithub().then(contributors =>{
-            console.log(contributors)
             this.setModalContent({
                 title: "О проекте",
                 description:`
@@ -69,12 +70,16 @@ class App extends Component {
                 contributors
             })
         });
-
-
     };
 
+    toggleCalendar = () => {
+        this.setState({
+            calendarView: !this.state.calendarView
+        })
+    }
 
-    render() {
+
+    render = () => {
         const filtredEvents = this.state.eventsToShow.filter((event) => {
             let eventPassMinDate = true,
                 eventPassMaxDate = true;
@@ -90,29 +95,30 @@ class App extends Component {
         if (this.state.eventsToShow.length === 0) {
             return <div className="loader"> Loading... </div>
         }
+
         return (
             <div>
-                <AppBar title="All events"
-                        iconElementLeft={<div></div>}
-                >
-                    <FlatButton label="О проекте" onClick={this.createAboutModal}></FlatButton>
-                    <DatePicker
-                        floatingLabelText="Cобытия начиная с:"
-                        onChange={this.handleStartDateSelect}
-                        maxDate={this.state.filters.maxDate}
-                    />
+                <Nav
+                    handleStartDateSelect={this.handleStartDateSelect}
+                    handleEndDateSelect={this.handleEndDateSelect}
+                    createAboutModal={this.createAboutModal}
+                    toggleCalendar={this.toggleCalendar}
+                    maxDate={this.state.filters.maxDate}
+                    minDate={this.state.filters.minDate}
+                    calendarView={this.state.calendarView}
+                 />
+                <div className="wrapper">
+                    {this.state.calendarView ?
+                      <Calendar eventsToPass={this.state.eventsToShow} setModalContent={this.setModalContent}/>
+                      :
+                      <EventsWrapper eventsToShow={filtredEvents} setModalContent={this.setModalContent}/>
+                    }
+                </div>
 
-                    <DatePicker
-                        floatingLabelText="Cобытия не позже чем:"
-                        onChange={this.handleEndDateSelect}
-                        minDate={this.state.filters.minDate}
-                    />
-                </AppBar>
-                <EventsWrapper eventsToShow={filtredEvents} setModalContent={this.setModalContent}/>
                 <ModalView modalContent={this.state.modalContent} openModal={this.state.openModal} handleClose={this.handleClose}/>
             </div>
         );
-    }
+    };
 
     componentDidMount() {
         fetch('https://still-caverns-40972.herokuapp.com/allEvents').then((response) => { // http://localhost:5000/allEvents pass me to use local server

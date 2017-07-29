@@ -39,12 +39,13 @@ const ModalView = ({modalContent, openModal, handleClose}) => {
                     <List>
                         <Subheader>Разработчики</Subheader>
                         {contributors.map((user) =>
-                        <a href={user.html_url}>
+                        <a href={user.html_url}
+                           key={user.id}
+                            >
                             <ListItem
                                 primaryText={user.login}
                                 leftAvatar={<Avatar src={user.avatar_url} />}
                                 rightIcon={<CommunicationChatBubble/>}
-                                key={user.id}
                                 />
                         </a>
                         )}
