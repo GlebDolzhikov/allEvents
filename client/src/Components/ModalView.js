@@ -1,6 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
-import {Dialog, FlatButton} from "material-ui";
+import {Dialog, FlatButton, ListItem, List} from "material-ui";
+import Avatar from 'material-ui/Avatar';
+import Subheader from 'material-ui/Subheader';
+import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bubble';
 
 const propTypes = {
     modalContent: PropTypes.object.isRequired,
@@ -9,10 +12,11 @@ const propTypes = {
 };
 
 const defaultProps = {
-    modalContent: {},
+    modalContent: {}
 };
 
 const ModalView = ({modalContent, openModal, handleClose}) => {
+    const {contributors} = modalContent;
     if (modalContent) {
         return (
             <Dialog
@@ -20,6 +24,7 @@ const ModalView = ({modalContent, openModal, handleClose}) => {
                 modal={false}
                 open={openModal}
                 onRequestClose={handleClose}
+                className="modalView"
                 actions={[
                     <FlatButton
                         label="Close"
@@ -30,6 +35,21 @@ const ModalView = ({modalContent, openModal, handleClose}) => {
                 >
                 <img src={modalContent.img} alt=""/>
                 <p>{modalContent.description}</p>
+                {contributors && contributors.length > 0 &&
+                    <List>
+                        <Subheader>Разработчики</Subheader>
+                        {contributors.map((user) =>
+                        <a href={user.html_url}>
+                            <ListItem
+                                primaryText={user.login}
+                                leftAvatar={<Avatar src={user.avatar_url} />}
+                                rightIcon={<CommunicationChatBubble/>}
+                                key={user.id}
+                                />
+                        </a>
+                        )}
+                    </List>
+                }
             </Dialog>)
     }
     return null;

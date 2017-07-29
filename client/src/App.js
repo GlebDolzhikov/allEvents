@@ -1,10 +1,12 @@
 import React, {Component} from "react";
 import "./App.css";
 import moment from "moment";
-import {AppBar, DatePicker} from "material-ui";
+import {AppBar, DatePicker, FlatButton} from "material-ui";
 
 import EventsWrapper from './Components/EventsWrapper';
 import ModalView from './Components/ModalView';
+import fetchGithub from './helpers/fetchGithub.js'
+
 
 class App extends Component {
     state = {
@@ -54,6 +56,23 @@ class App extends Component {
         this.handleOpen();
     };
 
+    createAboutModal = () => {
+        fetchGithub().then(contributors =>{
+            console.log(contributors)
+            this.setModalContent({
+                title: "О проекте",
+                description:`
+            All events - это не коммерческий проект с открытым кодом.
+            Главная цель которого собрать в единный календарь все старты по бегу велоспорту и плаванью.
+            `,
+                img:"opensource.png",
+                contributors
+            })
+        });
+
+
+    };
+
 
     render() {
         const filtredEvents = this.state.eventsToShow.filter((event) => {
@@ -76,6 +95,7 @@ class App extends Component {
                 <AppBar title="All events"
                         iconElementLeft={<div></div>}
                 >
+                    <FlatButton label="О проекте" onClick={this.createAboutModal}></FlatButton>
                     <DatePicker
                         floatingLabelText="Cобытия начиная с:"
                         onChange={this.handleStartDateSelect}
